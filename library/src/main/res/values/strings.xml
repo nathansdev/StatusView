@@ -2,6 +2,7 @@
     <string name="app_name">Library</string>
 
     <string name="connecting_text">Connecting&#8230;</string>
+    <string name="reconnecting_text">ReConnecting&#8230;</string>
     <string name="connected_text">Connection successful</string>
     <string name="connection_error_text">Connection error</string>
 </resources>
