@@ -174,7 +174,7 @@ public class StatusView extends RelativeLayout {
         loadingview.setOnClickListener(onLoadingClickListener);
     }
 
-    public void setOnCompleteClickListener(OnClickListener onCompleteClickListener){
+    public void setOnCompleteClickListener(OnClickListener onCompleteClickListener) {
         completeView.setOnClickListener(onCompleteClickListener);
     }
 
@@ -195,8 +195,8 @@ public class StatusView extends RelativeLayout {
             currentStatus = status;
             enterAnimation(getCurrentView(currentStatus));
         } else if (status != Status.IDLE) {
-            switchAnimation(getCurrentView(currentStatus), getCurrentView(status));
             currentStatus = status;
+            switchAnimation(getCurrentView(currentStatus), getCurrentView(status));
         } else {
             exitAnimation(getCurrentView(currentStatus));
         }
@@ -205,14 +205,14 @@ public class StatusView extends RelativeLayout {
         if (status == Status.COMPLETE)
             handler.postDelayed(autoDismissOnComplete, DISMISS_ON_COMPLETE_DELAY);
     }
+
     /**
-     * 
-     * @return Status object 
+     * @return Status object
      */
-    public Status getStatus(){
+    public Status getStatus() {
         return this.currentStatus;
     }
-    
+
     private View getCurrentView(Status status) {
         if (status == Status.IDLE)
             return null;

@@ -1,8 +1,7 @@
 package iammert.com.statusview;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -27,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         error = (Button) findViewById(R.id.error);
         loading = (Button) findViewById(R.id.loading);
         idle = (Button) findViewById(R.id.idle);
-
 
         complete.setOnClickListener(new View.OnClickListener() {
             @Override
