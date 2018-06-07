@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     Button error;
     Button loading;
     Button idle;
+    Button reconnectingWithDelay;
     StatusView statusView;
 
     @Override
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         error = (Button) findViewById(R.id.error);
         loading = (Button) findViewById(R.id.loading);
         idle = (Button) findViewById(R.id.idle);
+        reconnectingWithDelay = (Button) findViewById(R.id.reconnect);
 
         complete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,5 +57,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        reconnectingWithDelay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                statusView.setStatus(Status.RECONNECTING);
+            }
+        });
     }
 }

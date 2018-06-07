@@ -5,5 +5,5 @@ package iammert.com.library;
  */
 
 public enum Status {
-    IDLE, LOADING, ERROR, COMPLETE
+    IDLE, LOADING, ERROR, COMPLETE, RECONNECTING
 }

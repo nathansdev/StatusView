@@ -12,15 +12,15 @@ import android.util.AttributeSet;
 public class ConnectionStatusView extends StatusView{
 
     public ConnectionStatusView(Context context) {
-        super(context, R.layout.sv_layout_complete, R.layout.sv_layout_error, R.layout.sv_layout_loading);
+        super(context, R.layout.sv_layout_complete, R.layout.sv_layout_error, R.layout.sv_layout_loading, R.layout.sv_layout_reconnect_loading);
     }
 
     public ConnectionStatusView(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.sv_layout_complete, R.layout.sv_layout_error, R.layout.sv_layout_loading);
+        super(context, attrs, R.layout.sv_layout_complete, R.layout.sv_layout_error, R.layout.sv_layout_loading, R.layout.sv_layout_reconnect_loading);
     }
 
     public ConnectionStatusView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr, R.layout.sv_layout_complete, R.layout.sv_layout_error, R.layout.sv_layout_loading);
+        super(context, attrs, defStyleAttr, R.layout.sv_layout_complete, R.layout.sv_layout_error, R.layout.sv_layout_loading, R.layout.sv_layout_reconnect_loading);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

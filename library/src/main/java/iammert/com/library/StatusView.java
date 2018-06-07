@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class StatusView extends RelativeLayout {
     private View completeView;
     private View errorView;
     private View loadingview;
+    private View reconnectingView;
 
     /**
      * Fade in out animations
@@ -67,17 +69,17 @@ public class StatusView extends RelativeLayout {
 
     public StatusView(Context context) {
         super(context);
-        init(context, null, 0, 0, 0);
+        init(context, null, 0, 0, 0, 0);
     }
 
     public StatusView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs, 0, 0, 0);
+        init(context, attrs, 0, 0, 0, 0);
     }
 
     public StatusView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs, 0, 0, 0);
+        init(context, attrs, 0, 0, 0, 0);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -85,28 +87,28 @@ public class StatusView extends RelativeLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public StatusView(Context context, int completeLayout, int errorLayout, int loadingLayout) {
+    public StatusView(Context context, int completeLayout, int errorLayout, int loadingLayout, int reconnectingLayout) {
         super(context);
-        init(context, null, completeLayout, errorLayout, loadingLayout);
+        init(context, null, completeLayout, errorLayout, loadingLayout, reconnectingLayout);
     }
 
-    public StatusView(Context context, AttributeSet attrs, int completeLayout, int errorLayout, int loadingLayout) {
+    public StatusView(Context context, AttributeSet attrs, int completeLayout, int errorLayout, int loadingLayout, int reconnectingLayout) {
         super(context, attrs);
-        init(context, attrs, completeLayout, errorLayout, loadingLayout);
+        init(context, attrs, completeLayout, errorLayout, loadingLayout, reconnectingLayout);
     }
 
-    public StatusView(Context context, AttributeSet attrs, int defStyleAttr, int completeLayout, int errorLayout, int loadingLayout) {
+    public StatusView(Context context, AttributeSet attrs, int defStyleAttr, int completeLayout, int errorLayout, int loadingLayout, int reconnectingLayout) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs, completeLayout, errorLayout, loadingLayout);
+        init(context, attrs, completeLayout, errorLayout, loadingLayout, reconnectingLayout);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public StatusView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, int completeLayout, int errorLayout, int loadingLayout) {
+    public StatusView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, int completeLayout, int errorLayout, int loadingLayout, int reconnectingLayout) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs, completeLayout, errorLayout, loadingLayout);
+        init(context, attrs, completeLayout, errorLayout, loadingLayout, reconnectingLayout);
     }
 
-    private void init(Context context, AttributeSet attrs, int completeLayout, int errorLayout, int loadingLayout) {
+    private void init(Context context, AttributeSet attrs, int completeLayout, int errorLayout, int loadingLayout, int reconnectingLayout) {
 
         /**
          * Load initial values
@@ -126,6 +128,7 @@ public class StatusView extends RelativeLayout {
         int completeLayoutId = a.getResourceId(R.styleable.statusview_complete, 0);
         int errorLayoutId = a.getResourceId(R.styleable.statusview_error, 0);
         int loadingLayoutId = a.getResourceId(R.styleable.statusview_loading, 0);
+        int reconnectingLayoutId = a.getResourceId(R.styleable.statusview_reconnecting, 0);
 
         hideOnComplete = a.getBoolean(R.styleable.statusview_dismissOnComplete, true);
 
@@ -136,10 +139,12 @@ public class StatusView extends RelativeLayout {
             completeView = inflater.inflate(completeLayoutId, null);
             errorView = inflater.inflate(errorLayoutId, null);
             loadingview = inflater.inflate(loadingLayoutId, null);
+            reconnectingView = inflater.inflate(reconnectingLayoutId, null);
         } else {
             completeView = inflater.inflate(completeLayout, null);
             errorView = inflater.inflate(errorLayout, null);
             loadingview = inflater.inflate(loadingLayout, null);
+            reconnectingView = inflater.inflate(reconnectingLayout, null);
         }
 
         /**
@@ -148,6 +153,7 @@ public class StatusView extends RelativeLayout {
         completeView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         errorView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         loadingview.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        reconnectingView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         /**
          * Add layout to root
@@ -155,6 +161,7 @@ public class StatusView extends RelativeLayout {
         addView(completeView);
         addView(errorView);
         addView(loadingview);
+        addView(reconnectingView);
 
         /**
          * set visibilities of childs
@@ -162,6 +169,7 @@ public class StatusView extends RelativeLayout {
         completeView.setVisibility(View.INVISIBLE);
         errorView.setVisibility(View.INVISIBLE);
         loadingview.setVisibility(View.INVISIBLE);
+        reconnectingView.setVisibility(View.INVISIBLE);
 
         a.recycle();
     }
@@ -178,6 +186,10 @@ public class StatusView extends RelativeLayout {
         completeView.setOnClickListener(onCompleteClickListener);
     }
 
+    public void setOnReconnectingClickListener(OnClickListener onCompleteClickListener) {
+        reconnectingView.setOnClickListener(onCompleteClickListener);
+    }
+
     public View getErrorView() {
         return errorView;
     }
@@ -191,14 +203,17 @@ public class StatusView extends RelativeLayout {
     }
 
     public void setStatus(final Status status) {
-        if (currentStatus == Status.IDLE) {
-            currentStatus = status;
-            enterAnimation(getCurrentView(currentStatus));
-        } else if (status != Status.IDLE) {
-            currentStatus = status;
-            switchAnimation(getCurrentView(currentStatus), getCurrentView(status));
-        } else {
+        if (status == Status.IDLE) {
             exitAnimation(getCurrentView(currentStatus));
+            currentStatus = status;
+        } else if (getCurrentView(currentStatus) != null) {
+            Log.d("set status", "switch animation");
+            switchAnimation(getCurrentView(currentStatus), getCurrentView(status));
+            currentStatus = status;
+        } else {
+            Log.d("set status", "enter animation");
+            enterAnimation(getCurrentView(status));
+            currentStatus = status;
         }
 
         handler.removeCallbacksAndMessages(null);
@@ -222,6 +237,8 @@ public class StatusView extends RelativeLayout {
             return errorView;
         else if (status == Status.LOADING)
             return loadingview;
+        else if (status == Status.RECONNECTING)
+            return reconnectingView;
         return null;
     }
 
@@ -243,7 +260,6 @@ public class StatusView extends RelativeLayout {
     private void enterAnimation(View enterView) {
         if (enterView == null)
             return;
-
         enterView.setVisibility(VISIBLE);
         enterView.startAnimation(slideIn);
     }
